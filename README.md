@@ -54,5 +54,6 @@ sudo reboot
 ssh root@raspi-ip -o "UserKnownHostsFile=~/.ssh/known_hosts-raspi-dropbear"
 /lib/cryptsetup/askpass "enter luks password: " > /lib/cryptsetup/passfifo # exit, wait for the raspi to boot completely
 ssh pi@raspi-ip # this is the "normal" openssh-server, we are done :-)
-# do not forget to sudo mkinitramfs -v -o /boot/initramfs.gz before reboot to make sure it is still up to date
+# after every change of the kernel (kernelupdate) the initramfs has to be recreated, in my case I had to specify the new kernel version, it can be found in this directory (e.g. 4.1.19+): /lib/modules
+sudo mkinitramfs -v -o /boot/initramfs.gz <kernelversion>
 ```
