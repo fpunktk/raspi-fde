@@ -21,6 +21,7 @@ sudo mkinitramfs -v -o /boot/initramfs.gz # creates keys and directories for dro
 sudo vi /etc/initramfs-tools/initramfs.conf # add DROPBEAR=y and CRYPTSETUP=y, does not enforce including cryptsetup!?
 sudo vi /usr/share/initramfs-tools/hooks/cryptroot # enforce setup="yes" so that cryptsetup is included in initramfs
 sudo vi /etc/initramfs-tools/root/.ssh/authorized_keys # add your ssh-pubkeys
+sudo vi /usr/share/initramfs-tools/scripts/local-top/ # Fix https://bugs.launchpad.net/ubuntu/+source/cryptsetup/+bug/595648/comments/5 like described in the link by editing this by hand. Starting at line 288 comment out the first branch of the if.
 sudo mkinitramfs -v -o /boot/initramfs.gz # again so that the settings are applied, check output for dropbear and cryptsetup
 sudo vi /boot/config.txt # add: initramfs initramfs.gz followkernel
 sudo reboot # test reboot
@@ -39,7 +40,7 @@ sudo e2fsck /dev/mapper/raspi_crypt
 mkdir /tmp/piroot
 sudo mount /dev/mapper/raspi_crypt /tmp/piroot/
 sudo mount /dev/sdX1 /tmp/piroot/boot/
-sudo vim /tmp/piroot/boot/cmdline.txt # Change root=/dev/mmcblk0p2 to root=/dev/mapper/raspi_crypt and add cryptdevice=/dev/mmcblk0p2:raspi_crypt
+sudo vim /tmp/piroot/boot/cmdline.txt # Change root=/dev/mmcblk0p2 to root=/dev/mapper/raspi_crypt and add cryptdevice=/dev/mmcblk0p2:raspi_crypt and add ip=:::::eth0:dhcp
 sudo vim /tmp/piroot/etc/fstab # change /dev/mmcblk0p2 to /dev/mapper/raspi_crypt
 sudo vim /tmp/piroot/etc/crypttab # add raspi_crypt /dev/mmcblk0p2 none luks
 sudo umount /tmp/piroot/boot/ /tmp/piroot/
